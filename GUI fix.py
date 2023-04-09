@@ -21,7 +21,7 @@ def check_age():
         go_button.pack_forget()
         lookmovie_button.pack_forget()
         description_label.destroy()
-        
+        description_label_na.pack_forget()
  
     else:
         check_label.pack_forget()
@@ -37,7 +37,7 @@ def check_age():
         name_label.pack_forget()
         search_button.pack_forget()
         description_label.destroy()
-        
+        description_label_na.pack_forget()
         
         
 def lookmovie():
@@ -53,15 +53,17 @@ def lookmovie():
 
 #Define a function to get the description of the name
 def get_description():
+    global description_label
     name = name_entry.get() # Get the name from the user input
     found = False
     for row in worksheet.iter_rows(min_row=2, values_only=True): # Iterate over rows starting from row 2
         if row[0].lower() == name.lower():
             genre, ratings, year = row[1], row[2], row[3] # Get the values from the row
-            description_label.config(text=f"Genre: {genre}\nRatings: {ratings}\nYear: {year}") # Update the label with the description
+            description_label = tk.Label(text=f"Genre: {genre}\nRatings: {ratings}\nYear: {year}") # Update the label with the description
+            description_label.pack()
             found = True
     if not found:
-        description_label.config(text= "Movie not found\n But we are expanding our range of movies! Check back in awhile!")
+        description_label_na.pack()
 
 
 def trending_movies():
@@ -177,8 +179,7 @@ def show_movies():
 
     else:
         recommended_label.config(text="")
-        for child in movie_display_frame.winfo_children():
-            child.destroy()  # remove the movie labels from the frame
+        movie_label.pack_forget()  # remove the movie labels from the frame
         genre_label.pack()
         genre_combo.pack()
         go_button.pack()
@@ -233,12 +234,14 @@ def go_back():
     name_entry.pack_forget()
     name_label.pack_forget()
     search_button.pack_forget()
+
     for child in movie_display_frame.winfo_children():
-        if child.winfo_class() == "Label":
-            child.destroy()
+      if child.winfo_class() == "Label":
+          child.destroy()
     recommended_movies.clear()
-    description_label.destroy()
     movie_label.destroy()
+    description_label.pack_forget()
+    description_label_na.pack_forget()
 
 
 def exit_program():
@@ -270,13 +273,10 @@ lookmovie_button = tk.Button(window, text="Click to search a movie", command=loo
 
 # Create the user input label and entry widget
 name_label = tk.Label(window, text="Check a movie out:")
-name_label.pack()
 name_entry = tk.Entry(window)
-name_entry.pack()
 
 # Create the button to trigger the name search
 search_button = tk.Button(window, text="Search", command=get_description)
-search_button.pack()
 
 # Create the label to display the name description
 description_label = tk.Label(window, text="")
@@ -315,6 +315,6 @@ go_back_button = tk.Button(window, text="Go Back", command=go_back)
 exit_button = tk.Button(window, text="Exit", command=exit_program)
 exit_button.pack(side="bottom", pady=10)
 
-
+description_label_na = tk.Label(window, text= "Movie not found\n But we are expanding our range of movies! Check back in awhile!")
 # Run the window
 window.mainloop()
