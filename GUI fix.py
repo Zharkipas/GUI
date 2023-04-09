@@ -7,15 +7,48 @@ from tkinter import ttk
 workbook = openpyxl.load_workbook("Moviesbase.xlsx")
 worksheet = workbook.active
 
+def check_age():
+ 
+    age = int(age_entry.get())
+    if age < 13:
+        check_label.pack()
+        name_entry.pack_forget()
+        name_label.pack_forget()
+        search_button.pack_forget()
+        T3_label.pack_forget()
+        genre_label.pack_forget()
+        genre_combo.pack_forget()
+        go_button.pack_forget()
+        lookmovie_button.pack_forget()
+        description_label.destroy()
+        
+ 
+    else:
+        check_label.pack_forget()
+        T3_label.pack()
+        T3_label.place(x=0, y=0)
+        genre_label.pack()
+        genre_combo.pack()
+        go_button.pack()
+        age_label.pack_forget()
+        age_entry.pack_forget()
+        check_button.pack_forget()
+        name_entry.pack_forget()
+        name_label.pack_forget()
+        search_button.pack_forget()
+        description_label.destroy()
+        
+        
+        
 def lookmovie():
     recommended_label.config(text="")
+    genre_label.pack_forget()
+    genre_combo.pack_forget()
+    lookmovie_button.pack_forget()
+    go_button.pack_forget()
     name_entry.pack()
     name_label.pack()
     search_button.pack()
-    genre_label.pack_forget()
-    genre_combo.pack_forget()
-    go_button.pack_forget()
-    lookmovie_button.pack_forget()
     go_back_button.pack()
 
 #Define a function to get the description of the name
@@ -28,8 +61,8 @@ def get_description():
             description_label.config(text=f"Genre: {genre}\nRatings: {ratings}\nYear: {year}") # Update the label with the description
             found = True
     if not found:
-        description_label.config(text="Movie not found\n But we are expanding our range of movies! Check back in awhile!")
-    go_button.pack()
+        description_label.config(text= "Movie not found\n But we are expanding our range of movies! Check back in awhile!")
+
 
 def trending_movies():
     result_label.config(text=f"Here are this week's Top 3 trending movies!\n1) Avatar: The Way of Water\n2) Top Gun: Maverick\n 3)Black Panther: Wakanda Forever")
@@ -192,8 +225,6 @@ def go_back():
     result_label.config(text="")
     for child in movie_frame.winfo_children():
         child.destroy()
-    T3_label.pack()
-    T3_label.place(x=0, y=0)
     genre_label.pack()
     genre_combo.pack()
     go_button.pack()
@@ -206,7 +237,6 @@ def go_back():
         if child.winfo_class() == "Label":
             child.destroy()
     recommended_movies.clear()
-    name_entry.delete(0, 'end')
     description_label.destroy()
     movie_label.destroy()
 
@@ -216,38 +246,10 @@ def exit_program():
         messagebox.showinfo("Exit", "Thank you for using The Movie Guru. Have a nice day!")
         window.destroy()
 
-def check_age():
- 
-    age = int(age_entry.get())
-    if age < 13:
-        result_label.config(text="Sorry, there are no available movies right now; please try again later.")
-        name_entry.pack_forget()
-        name_label.pack_forget()
-        search_button.pack_forget()
-        T3_label.pack_forget()
-        genre_label.pack_forget()
-        genre_combo.pack_forget()
-        go_button.pack_forget()
-        lookmovie_button.pack_forget()
- 
-    else:
-        T3_label.pack()
-        T3_label.place(x=0, y=0)
-        genre_label.pack()
-        genre_combo.pack()
-        go_button.pack()
-        age_label.pack_forget()
-        age_entry.pack_forget()
-        check_button.pack_forget()
-        name_entry.pack_forget()
-        name_label.pack_forget()
-        search_button.pack_forget()
-    
-
 # Create a window
 window = tk.Tk()
 window.title("The Movie Guru")
-window.geometry("700x290")
+window.geometry("700x500")
 
 # Create a label and entry for age input
 age_label = tk.Label(window, text="Welcome\nFor verification, please enter your age:")
@@ -258,10 +260,13 @@ age_entry.pack()
 # Create a button to check age
 check_button = tk.Button(window, text="Check", command=check_age)
 check_button.pack()
-
+check_label = tk.Label(window, text="Sorry, there are no available movies right now; please try again later.")
+# Create a button to show recommended movies
+go_button = tk.Button(window, text="Let's Go", command=show_movies) 
 #create a button to look up for movie
 lookmovie_button = tk.Button(window, text="Click to search a movie", command=lookmovie)
-lookmovie_button.pack()
+#lookmovie_button.pack()
+
 
 # Create the user input label and entry widget
 name_label = tk.Label(window, text="Check a movie out:")
@@ -285,8 +290,7 @@ genre_label = tk.Label(window, text="Please select a movie genre:")
 genre_combo = ttk.Combobox(window, values=["Action", "Comedy", "Sci-Fi", "Animation", "Documentary"])
 genre_combo.current(0) # Set default value to "Action"
 
-# Create a button to show recommended movies
-go_button = tk.Button(window, text="Let's Go", command=show_movies)
+
 
 # Create a label for the result
 result_label = tk.Label(window, text="")
@@ -310,6 +314,7 @@ go_back_button = tk.Button(window, text="Go Back", command=go_back)
 #create a button to exit the program
 exit_button = tk.Button(window, text="Exit", command=exit_program)
 exit_button.pack(side="bottom", pady=10)
+
 
 # Run the window
 window.mainloop()
